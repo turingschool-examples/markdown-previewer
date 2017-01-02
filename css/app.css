@@ -1,0 +1,44 @@
+body {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-weight: 500;
+  margin: 3% 5%;
+}
+
+h4 {
+  font-weight: 300;
+}
+
+h4 span.counter {
+  font-weight: 700;
+}
+
+p { font-size: 13px; max-width: 900px; line-height: 16px; color: #444; }
+
+#submit-markdown {
+    width: 100%;
+    padding: 30px 0px;
+    text-align: center;
+    background-color: #4FD1ED;
+    border: 1px solid #49AFB7;
+    border-radius: 5px;
+}
+
+#submit-markdown:hover {
+    cursor: pointer;
+    background-color: #49AFB7;
+}
+
+#live-markdown, #html-preview, .half {
+    display: inline-block;
+    width: 45%;
+    height: 250px;
+    margin-bottom: 15px;
+}
+
+.half { height: auto; text-align: center; }
+#html-preview {
+    border: 1px solid #aaa;
+    background-color: #eee;
+    border-radius: 5px;
+    float: right;
+}

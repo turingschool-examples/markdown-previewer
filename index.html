@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="SW Implementation">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SW Markdown Previewer</title>
+    <link rel="stylesheet" type="text/css" href="./css/app.css" />
+  </head>
+
+  <body>
+    <h1>Markdown Previewer</h1>
+    <p>Type markdown in the textarea on the left, HTML preview on the right. Submit button sends a message to a service worker with current markdown. Service worker should handle the message event and send a message back to the page that logs to the console.</p>
+
+    <div class="half">Type Markdown Here:</div>
+    <div class="half">See HTML Preview Here:</div>
+    <textarea id="live-markdown" width="400" height="200"></textarea>
+    <div id="html-preview"></div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="./lib/markdown-it.min.js"></script>
+
+    <script type="text/javascript">
+      $('#live-markdown').on('keyup', event => updatePreview(event));
+
+      function updatePreview(event) {
+        const md = markdownit();
+        let htmlResult = md.render(event.currentTarget.value);
+        $('#html-preview').html(htmlResult);
+      };
+    </script>
+  </body>
+</html>
