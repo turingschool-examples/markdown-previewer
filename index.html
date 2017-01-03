@@ -13,16 +13,29 @@
     <h1>Markdown Previewer</h1>
     <p>Type markdown in the textarea on the left, HTML preview on the right. Submit button sends a message to a service worker with current markdown. Service worker saves the new markdown to IndexedDB.</p>
 
-    <h4>You Have <span class='counter'></span> record(s) in IndexedDB</h4>
+    <h4>You Have <span class="counter"></span> record(s) in IndexedDB.</h4>
+    <p>Load Markdown Record:</p>
+    <select id="markdown-records">
+      <option>-- Select Markdown --</option>
+    </select>
 
-    <div class="half">Type Markdown Here:</div>
-    <div class="half">See HTML Preview Here:</div>
-    <textarea id="live-markdown" width="400" height="200"></textarea>
-    <div id="html-preview"></div>
+    <div id="container">
+      <div>
+        <h5>New Markdown:</h5>
+        <input type="text" id="file-name" name="file-name" placeholder="File name" />
+        <textarea id="live-markdown" width="400" height="200"></textarea>
+      </div>
+      <div>
+        <h5>HTML Preview:</h5>
+        <div id="html-preview"></div>
+      </div>
+    </div>
+
     <div id="submit-markdown">Save Markdown</div>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="./lib/markdown-it.min.js"></script>
     <script src="./app.js"></script>
+    <script src="./indexedDB.js"></script>
   </body>
 </html>

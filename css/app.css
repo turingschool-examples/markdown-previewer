@@ -12,7 +12,35 @@ h4 span.counter {
   font-weight: 700;
 }
 
-p { font-size: 13px; max-width: 900px; line-height: 16px; color: #444; }
+h5 {
+  font-size: 13px; max-width: 900px; line-height: 16px; color: #444;
+}
+
+#container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#container > div {
+  width: 45%;
+}
+
+input, textarea { 
+  width: 100%;
+  margin: 0 0 10px 0;
+}
+
+input {
+  height: 20px;
+}
+
+textarea {
+  height: 210px;
+}
+
+#html-preview {
+  height: 250px;
+}
 
 #submit-markdown {
     width: 100%;
@@ -21,6 +49,7 @@ p { font-size: 13px; max-width: 900px; line-height: 16px; color: #444; }
     background-color: #4FD1ED;
     border: 1px solid #49AFB7;
     border-radius: 5px;
+    margin: 15px auto;
 }
 
 #submit-markdown:hover {
@@ -28,17 +57,8 @@ p { font-size: 13px; max-width: 900px; line-height: 16px; color: #444; }
     background-color: #49AFB7;
 }
 
-#live-markdown, #html-preview, .half {
-    display: inline-block;
-    width: 45%;
-    height: 250px;
-    margin-bottom: 15px;
-}
-
-.half { height: auto; text-align: center; }
 #html-preview {
     border: 1px solid #aaa;
     background-color: #eee;
     border-radius: 5px;
-    float: right;
 }

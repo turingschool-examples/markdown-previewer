@@ -20,6 +20,9 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('message', event => {
+  let mdContent = event.data.mdContent;
+  let mdFileName = event.data.mdFileName;
+  console.log('mdContent: ', mdContent);
   let client = self.clients.matchAll().then(clients => clients[0]);
   let dbReq = indexedDB.open('mdFileHistory');
 
@@ -39,9 +42,9 @@ self.addEventListener('message', event => {
 
     let objectStore = transaction.objectStore("mdFiles");
     let objectStoreReq = objectStore.add({ 
-      fileName: 'MarkdownFileName-' + Date.now(),
+      fileName: `${mdFileName}.md`,
       authorName: 'Brittany Storoz',
-      markdownContent: 'hellooooo-' + Date.now()
+      markdownContent: mdContent
     });
 
     objectStoreReq.onsuccess = (event) => {
