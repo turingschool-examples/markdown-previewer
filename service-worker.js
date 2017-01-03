@@ -3,6 +3,7 @@ self.addEventListener('install', event => {
     caches.open('assets-v1').then(cache => {
       return cache.addAll([
         '/index.html',
+        '/indexedDB.js',
         '/app.js',
         '/css/app.css',
         '/lib/markdown-it.min.js'
