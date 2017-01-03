@@ -20,5 +20,41 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('message', event => {
-  self.registration.showNotification('New Markdown Saved!');
+  let client = self.clients.matchAll().then(clients => clients[0]);
+  let dbReq = indexedDB.open('mdFileHistory');
+
+  dbReq.onsuccess = (event) => {
+    console.log('DB opened from service worker');
+    
+    let db = event.target.result;
+    let transaction = db.transaction(['mdFiles'], 'readwrite');
+
+    transaction.oncomplete = (event) => {
+      console.log('Transaction Success');
+    }
+
+    transaction.onerror = (event) => {
+      console.log('Transaction Error');
+    }
+
+    let objectStore = transaction.objectStore("mdFiles");
+    let objectStoreReq = objectStore.add({ 
+      fileName: 'MarkdownFileName-' + Date.now(),
+      authorName: 'Brittany Storoz',
+      markdownContent: 'hellooooo-' + Date.now()
+    });
+
+    objectStoreReq.onsuccess = (event) => {
+      console.log('objectStore request succeeded');
+    }
+
+    objectStoreReq.onerror = (event) => {
+      console.log('objectStore request failed');
+    };
+  };
+
+  dbReq.onerror = (event) => {
+    console.log('DB not opened from sw');
+  };
+
 });
