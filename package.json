@@ -1,0 +1,15 @@
+{
+  "name": "markdown-previewer",
+  "version": "1.0.0",
+  "description": "Markdown previewer with service workers & indexedDB",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turingschool-examples/markdown-previewer.git"
+  },
+  "author": "Turing School of Software and Design",
+  "license": "CC-BY-NC-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/turingschool/markdown-previewer/issues"
+  }
+}
