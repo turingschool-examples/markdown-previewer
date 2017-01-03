@@ -18,6 +18,14 @@ function loadMarkdown(markdownFileId) {
 
 $('#live-markdown').on('keyup', event => updatePreview(event.currentTarget.value));
 
+navigator.serviceWorker.addEventListener('message', message => {
+ if (message.data.updateRecordCount) {
+  let currentCount = parseInt($('.counter').text());
+  $('.counter').text(currentCount + 1);
+  $('#markdown-records').append(`<option value=${message.data.recordId}>${message.data.fileName}</option>`);
+ }
+});
+
 function updatePreview(markdownContent) {
   const md = markdownit();
   let htmlResult = md.render(markdownContent);

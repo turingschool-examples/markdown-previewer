@@ -22,9 +22,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('message', event => {
   let mdContent = event.data.mdContent;
-  let mdFileName = event.data.mdFileName;
-  console.log('mdContent: ', mdContent);
-  let client = self.clients.matchAll().then(clients => clients[0]);
+  let mdFileName = `${event.data.mdFileName}.md`;
   let dbReq = indexedDB.open('mdFileHistory');
 
   dbReq.onsuccess = (event) => {
@@ -43,13 +41,20 @@ self.addEventListener('message', event => {
 
     let objectStore = transaction.objectStore("mdFiles");
     let objectStoreReq = objectStore.add({ 
-      fileName: `${mdFileName}.md`,
+      fileName: mdFileName,
       authorName: 'Brittany Storoz',
       markdownContent: mdContent
     });
 
     objectStoreReq.onsuccess = (event) => {
-      console.log('objectStore request succeeded');
+      console.log('objectStore request succeeded');    
+      self.clients.matchAll().then(clients => 
+        clients[0].postMessage({
+          'updateRecordCount': true,
+          'recordId': event.target.result,
+          'fileName': mdFileName
+        })
+      );
     }
 
     objectStoreReq.onerror = (event) => {
