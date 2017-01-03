@@ -1,0 +1,20 @@
+{
+  "name": "markdown-previewer",
+  "version": "1.0.0",
+  "description": "Markdown Preview application using web workers & service workers",
+  "main": "index.js",
+  "scripts": {
+    "start": "python -m SimpleHTTPServer 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turingschool-examples/markdown-previewer.git"
+  },
+  "keywords": [],
+  "author": "Steve Kinney <hello@stevekinney.net> (http://stevekinney.net)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/turingschool-examples/markdown-previewer/issues"
+  },
+  "homepage": "https://github.com/turingschool-examples/markdown-previewer#readme"
+}
