@@ -9,10 +9,7 @@ function updatePreview(markdownContent) {
 function enableSubmitButton(event) {
   if (navigator.serviceWorker.controller) {
     $('#submit-markdown').on('click', function() {
-      navigator.serviceWorker.controller.postMessage({
-        mdFileName: $('#file-name').val(),
-        mdContent: $('#live-markdown').val()
-      });
+      // post message to service worker for storing markdown in IndexedDB
     });
   }
 }
