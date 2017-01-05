@@ -23,7 +23,7 @@
       <div>
         <h5>New Markdown:</h5>
         <input type="text" id="file-name" name="file-name" placeholder="File name" />
-        <textarea id="live-markdown" width="400" height="200"></textarea>
+        <textarea id="live-markdown" width="400" height="200"># placeholder heading</textarea>
       </div>
       <div>
         <h5>HTML Preview:</h5>
@@ -34,8 +34,8 @@
     <div id="submit-markdown">Save Markdown</div>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="./node_modules/idb/lib/idb.js"></script>
     <script src="./lib/markdown-it.min.js"></script>
     <script src="./app.js"></script>
-    <script src="./indexedDB.js"></script>
   </body>
 </html>

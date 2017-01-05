@@ -1,56 +1,80 @@
-function loadMarkdown(markdownFileId) {
-  let objectStore = db.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME);
-  let request = objectStore.get(markdownFileId);
+const markdownDb = idb.open('mdFileHistory', 8, upgradeDB => {
+  upgradeDB.createObjectStore('mdFiles', { keyPath: 'createdAt' });
+});
 
-  request.onerror = function(event) {
-    console.log('Request Error');
-  };
+function populateRecords() {
+  let getLocalRecords = markdownDb.then(db => db.transaction('mdFiles').objectStore('mdFiles').getAll());
+  getLocalRecords.then(records => {
+    records.forEach(record => {
+      $('#markdown-records').append(`<option value=${record.createdAt}>${record.fileName}</option>`);
+    });
 
-  request.onsuccess = function(event) {
-    let mdResult = request.result.markdownContent;
-    let mdFileName = request.result.fileName;
+    $('.counter').text(records.length);
+    $('#markdown-records').change(event => {
+      loadMarkdown(parseInt(event.currentTarget.value));
+    });
+  });
+}
 
-    $('#file-name').val(mdFileName)
-    $('#live-markdown').val(mdResult);
-    updatePreview(mdResult);
-  };
+function loadMarkdown(markdownCreatedAt) {
+  markdownDb.then(db => {
+    return db.transaction('mdFiles').objectStore('mdFiles').get(markdownCreatedAt);
+  }).then(result => {
+    const { fileName, mdContent } = result;
+
+    $('#file-name').val(fileName)
+    $('#live-markdown').val(mdContent);
+    updatePreview(mdContent);
+  });
+};
+
+function updatePreview(mdContent) {
+  const md = markdownit();
+  let htmlResult = md.render(mdContent);
+  $('#html-preview').html(htmlResult);
+};
+
+function saveMarkdownLocally(values) {
+  let markdownData = {
+    mdContent: values.mdContent,
+    authorName: 'Brittany Storoz',
+    fileName: `${values.fileName}.md`,
+    createdAt: Date.now()
+  }
+
+  return markdownDb.then(db => {
+    const transaction = db.transaction('mdFiles', 'readwrite');
+    transaction.objectStore('mdFiles').put(markdownData);
+
+    let currentCount = parseInt($('.counter').text());
+    $('.counter').text(currentCount + 1);
+    $('#markdown-records').append(`<option value=${markdownData.createdAt}>${markdownData.fileName}</option>`);
+
+    return transaction.complete;
+  });
 }
 
 $('#live-markdown').on('keyup', event => updatePreview(event.currentTarget.value));
 
-navigator.serviceWorker.addEventListener('message', message => {
- if (message.data.updateRecordCount) {
-  let currentCount = parseInt($('.counter').text());
-  $('.counter').text(currentCount + 1);
-  $('#markdown-records').append(`<option value=${message.data.recordId}>${message.data.fileName}</option>`);
- }
-});
-
-function updatePreview(markdownContent) {
-  const md = markdownit();
-  let htmlResult = md.render(markdownContent);
-  $('#html-preview').html(htmlResult);
-};
-
-function enableSubmitButton(event) {
-  if (navigator.serviceWorker.controller) {
-    $('#submit-markdown').on('click', function() {
-      navigator.serviceWorker.controller.postMessage({
-        mdFileName: $('#file-name').val(),
-        mdContent: $('#live-markdown').val()
-      });
-    });
-  }
-}
-
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && 'SyncManager' in window) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
         Notification.requestPermission();
-        enableSubmitButton();
+        $('#submit-markdown').on('click', () => {
+          saveMarkdownLocally({
+            fileName: $('#file-name').val(),
+            mdContent: $('#live-markdown').val(),
+          }).then(() => {
+            registration.sync.register('persistToDatabase');
+          }).catch(err => console.log("Error submitting markdown: ", err));
+        });
+
       }).catch(err => {
         console.log(`ServiceWorker registration failed: ${err}`);
       });
   });
 }
+
+populateRecords();
