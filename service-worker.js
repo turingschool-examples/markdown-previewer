@@ -1,22 +1,13 @@
 self.importScripts('node_modules/idb/lib/idb.js')
 let markdownDb = idb.open('mdFileHistory', 8);
 
+// Returns any markdown records saved in IndexedDB
 function getLocalRecords() {
   return markdownDb.then(db => db.transaction('mdFiles').objectStore('mdFiles').getAll());
 }
 
 function persistLocalChanges() {
-  return getLocalRecords().then(records => {
-    return fetch('/markdowns', {
-      method: 'POST',
-      body: JSON.stringify({ 
-        markdowns: records
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  });
+  // perform a fetch request to POST local markdowns to the server
 };
 
 self.addEventListener('install', event => {
@@ -39,17 +30,4 @@ self.addEventListener('fetch', event => {
       return response || fetch(event.request);
     })
   );
-});
-
-self.addEventListener('sync', event => {
-  if (event.tag == 'persistToDatabase') {
-    event.waitUntil(persistLocalChanges()
-      .then(() => {
-        self.registration.showNotification("Markdowns synced to server");
-      })
-      .catch(() => {
-        console.log("Error syncing markdowns to server");
-      })
-    );
-  }
 });

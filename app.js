@@ -55,26 +55,9 @@ function saveMarkdownLocally(values) {
 }
 
 $('#live-markdown').on('keyup', event => updatePreview(event.currentTarget.value));
+populateRecords();
+
 
 if ('serviceWorker' in navigator && 'SyncManager' in window) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(registration => navigator.serviceWorker.ready)
-      .then(registration => {
-        Notification.requestPermission();
-        $('#submit-markdown').on('click', () => {
-          saveMarkdownLocally({
-            fileName: $('#file-name').val(),
-            mdContent: $('#live-markdown').val(),
-          }).then(() => {
-            registration.sync.register('persistToDatabase');
-          }).catch(err => console.log("Error submitting markdown: ", err));
-        });
-
-      }).catch(err => {
-        console.log(`ServiceWorker registration failed: ${err}`);
-      });
-  });
+ // register service worker here
 }
-
-populateRecords();
