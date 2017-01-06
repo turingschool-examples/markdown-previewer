@@ -42,7 +42,7 @@ app.get('/markdowns', function(request, response) {
   response.send({ markdowns: app.locals.markdowns });
 });
 
-let port_number = process.env.PORT || 3076
+let port_number = process.env.PORT || 5000
 
 app.listen(port_number, () => {
   console.log(`${app.locals.title} is running on ${port_number}.`);

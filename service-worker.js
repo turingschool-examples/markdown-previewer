@@ -20,7 +20,6 @@ function persistLocalChanges() {
 };
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
   event.waitUntil(
     caches.open('assets-v1').then(cache => {
       return cache.addAll([
@@ -30,6 +29,7 @@ self.addEventListener('install', event => {
         '/lib/markdown-it.min.js'
       ])
     })
+    .then(() => self.skipWaiting())
   );
 });
 
@@ -42,7 +42,7 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('sync', event => {
-  if (event.tag == 'persistToDatabase') {
+  if (event.tag === 'persistToDatabase') {
     event.waitUntil(persistLocalChanges()
       .then(() => {
         self.registration.showNotification("Markdowns synced to server");

@@ -55,6 +55,7 @@ function saveMarkdownLocally(values) {
 }
 
 $('#live-markdown').on('keyup', event => updatePreview(event.currentTarget.value));
+populateRecords();
 
 if ('serviceWorker' in navigator && 'SyncManager' in window) {
   window.addEventListener('load', () => {
@@ -76,5 +77,3 @@ if ('serviceWorker' in navigator && 'SyncManager' in window) {
       });
   });
 }
-
-populateRecords();
