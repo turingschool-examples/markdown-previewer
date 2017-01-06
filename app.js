@@ -34,11 +34,11 @@ function updatePreview(mdContent) {
   $('#html-preview').html(htmlResult);
 };
 
-function saveMarkdownLocally(values) {
+function saveMarkdownLocally() {
   let markdownData = {
-    mdContent: values.mdContent,
-    authorName: 'Brittany Storoz',
-    fileName: `${values.fileName}.md`,
+    mdContent: $('#live-markdown').val(),
+    authorName: 'Joe Shmoe',
+    fileName: `${$('#file-name').val()}.md`,
     createdAt: Date.now()
   }
 
