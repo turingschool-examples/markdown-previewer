@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="SW Implementation">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Markdown Previewer</title>
+    <link rel="stylesheet" type="text/css" href="./css/app.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1><img src="./img/logo.png" /> hot<b>Mark</b></h1>
+      <p>Type markdown on the left and automatically see an HTML preview on the right!</p>
+    </header>
+
+    <section id="content">
+      <div>
+        <h4>Markdown:</h4>
+        <textarea id="live-markdown" width="400" height="200"></textarea>
+      </div>
+      <div>
+        <h4>HTML Preview:</h4>
+        <div id="html-preview"></div>
+      </div>
+    </section>
+
+    <script src="./lib/jquery-3.2.1.js"></script>
+    <script src="./lib/markdown-it.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
