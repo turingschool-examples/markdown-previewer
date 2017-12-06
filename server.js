@@ -12,7 +12,7 @@ const requireHTTPS = (request, response, next) => {
   next();
 };
 
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 3000);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
