@@ -22,6 +22,7 @@ app.get('*',function(req,res,next){
 
 
 app.get('/', (request, response) => {
+  console.log("FROM INITIAL GET: ", req.headers);
   response.sendFile('index.html');
 });
 
