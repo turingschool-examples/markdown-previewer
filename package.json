@@ -5,7 +5,8 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "express-https-redirect": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {

@@ -1,22 +1,16 @@
 const express = require('express');
+const httpsRedirect = require('express-https-redirect');
 const app = express();
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-
-const requireHTTPS = (req, res, next) => {
-  if (req.headers['x-forwarded-proto'] != 'https') {
-      return res.redirect('https://' + req.get('host') + req.url);
-  }
-  next();
-};
 
 app.set('port', process.env.PORT || 3001);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.use(requireHTTPS);
+app.use('/', httpsRedirect);
 
 app.get('/', (request, response) => {
   response.sendFile('index.html');
