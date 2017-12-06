@@ -12,6 +12,15 @@
   <body>
     <header>
       <h1><img src="./img/logo.png" /> hot<b>Mark</b></h1>
+
+
+      <section id="idb-list">
+        <h3>Markdowns Stored in IndexedDB:</h3>
+        <select id="offline-markdowns">
+          <option>Select Markdown...</option>
+        </select>
+      </section>
+
       <p>Type markdown on the left and automatically see an HTML preview on the right!</p>
     </header>
 
@@ -26,8 +35,13 @@
       </div>
     </section>
 
+    <section id="add-markdown">
+      <label for="title">Markdown Title: <input id="title" name="title" type="text" /></label>
+      <div id="submit-markdown">Save Markdown</div>
+    </section>
+
     <script src="./lib/jquery-3.2.1.js"></script>
     <script src="./lib/markdown-it.min.js"></script>
-    <script src="./app.js"></script>
+    <script src="./bundle.js"></script>
   </body>
 </html>
