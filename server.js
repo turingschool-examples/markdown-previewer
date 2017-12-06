@@ -13,6 +13,7 @@ app.use(express.static(__dirname + '/public'));
 // app.use('/', httpsRedirect);
 
 app.get('*',function(req,res,next){
+  console.log("MIDDLEWARE FIRING: ", req.headers);
   if (req.headers['x-forwarded-proto'] != 'https') {
     return res.redirect('https://' + req.get('host') + req.url);
   }

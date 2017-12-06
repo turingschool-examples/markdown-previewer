@@ -3,6 +3,7 @@
   "name": "Your Favorite MarkDown Previewer",
   "background_color": "#dcaffd",
   "theme_color": "#74c7fd",
+  "display": "fullscreen",
   "icons": [
     {
       "src": "img/icon-48.png",
