@@ -118,6 +118,7 @@ $('#submit-markdown').on('click', event => {
 
   Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["c" /* saveOfflineMarkdown */])({ id, content, title }).then(md => {
     appendMarkdowns([{ id, title }]);
+    $('#offline-markdowns').val(`md-${id}`);
   }).catch(error => console.log(`Error saving markdown: ${error}`));
 });
 

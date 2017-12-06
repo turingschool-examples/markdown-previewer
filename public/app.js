@@ -24,7 +24,10 @@ $('#submit-markdown').on('click', event => {
   let id = Date.now();
 
   saveOfflineMarkdown({ id, content, title })
-    .then(md => { appendMarkdowns([{ id, title }])})
+    .then(md => { 
+      appendMarkdowns([{ id, title }]);
+      $('#offline-markdowns').val(`md-${id}`);
+    })
     .catch(error => console.log(`Error saving markdown: ${error}`));
 });
 
@@ -36,7 +39,7 @@ $('#submit-markdown').on('click', event => {
 const appendMarkdowns = (mds) => {
   mds.forEach(md => {
     $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}</option>`);
-  })
+  });
 }
 
 // Update markdown/HTML content when selecting markdown from drop-down menu
