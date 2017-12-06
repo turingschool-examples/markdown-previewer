@@ -20,9 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 app.locals.markdowns = [
-  { id: 1512598678712, title: Lorem, content: '# hey \n## whats up' },
-  { id: 1512598678716, title: Ipsum, content: '# bye \n## go away' },
-  { id: 1512598678719, title: Dolor, content: '# yoo \n## set amet' }
+  { id: 1512598678712, title: 'Lorem', content: '# hey \n## whats up' },
+  { id: 1512598678716, title: 'Ipsum', content: '# bye \n## go away' },
+  { id: 1512598678719, title: 'Dolor', content: '# yoo \n## set amet' }
 ];
 
 app.get('/', (request, response) => {
