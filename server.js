@@ -6,7 +6,7 @@ const path = require('path');
 
 const requireHTTPS = (request, response, next) => {
   if (request.header('x-forwarded-proto') != 'https') {
-    return res.redirect(`https://${request.header('host')}${request.url}`);
+    return response.redirect(`https://${request.header('host')}${request.url}`);
   }
   next();
 };
