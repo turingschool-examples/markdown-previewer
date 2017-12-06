@@ -7,13 +7,13 @@ db.version(1).stores({
 });
 
 export const saveOfflineMarkdown = (md) => {
-  return db.markdownFiles.add(md);
+ // add markdown to IDB
 }
 
 export const getSingleMarkdown = (id) => {
-  return db.markdownFiles.get(parseInt(id))
+  // retrieve single markdown from IDB by id
 }
 
 export const loadOfflineMarkdowns = () => {
-  return db.markdownFiles.toArray()
+  // retrieve all markdowns from IDB
 }; 

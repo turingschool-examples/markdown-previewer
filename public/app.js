@@ -23,12 +23,10 @@ $('#submit-markdown').on('click', event => {
   let title = $('#title').val();
   let id = Date.now();
 
-  saveOfflineMarkdown({ id, content, title })
-    .then(md => { 
-      appendMarkdowns([{ id, title }]);
-      $('#offline-markdowns').val(`md-${id}`);
-    })
-    .catch(error => console.log(`Error saving markdown: ${error}`));
+  /****************************** TO DO ******************************/
+  // 1. Save the markdown to indexedDB with appropriate data. Then...
+  // 2. Append markdown to the DOM with the appendMarkdowns() function
+  /*******************************************************************/
 });
 
 
@@ -44,6 +42,15 @@ const appendMarkdowns = (mds) => {
 
 // Update markdown/HTML content when selecting markdown from drop-down menu
 const setSelectedMarkdown = (id) => {
+
+  /****************************** TO DO ******************************/
+  // 1. Get single markdown from IDB by it's ID. Then...
+  // 2. Update the value of the #live-markdown textarea to display that
+  //    markdown's content
+  // 3. Then, trigger keyup() on the #live-markdown textarea to prompt
+  //    the HTML preview to update
+  /*******************************************************************/
+
   getSingleMarkdown(id).then(md => {
     $('#live-markdown').val(md.content);
     $('#live-markdown').keyup();
@@ -64,10 +71,10 @@ const updatePreview = (event) => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     
-    // Load markdowns from indexedDB
-    loadOfflineMarkdowns()
-      .then(markdowns => appendMarkdowns(markdowns))
-      .catch(error => console.log(`Error loading markdowns: ${error}`));
+  /****************************** TO DO ******************************/
+  // 1. Load markdowns from IndexedDB, then...
+  // 2. append them to the DOM with appendMarkdowns()
+  /*******************************************************************/
     
     // Register a new service worker
     navigator.serviceWorker.register('./service-worker.js')
