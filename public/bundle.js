@@ -99,12 +99,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__indexedDB__ = __webpack_require__(2);
 
 
+/****EVENT LISTENERS****/
+
+// Update HTML preview when markdown textarea changes
 $('#live-markdown').on('keyup', event => updatePreview(event));
+
+// Set selected markdown when using drop down menu
 $('#offline-markdowns').on('change', function (event) {
   let markdownId = $(this).val().split('-')[1];
   setSelectedMarkdown(markdownId);
 });
 
+// Save markdown to IndexedDB
 $('#submit-markdown').on('click', event => {
   let content = $('#live-markdown').val();
   let title = $('#title').val();
@@ -115,26 +121,31 @@ $('#submit-markdown').on('click', event => {
   }).catch(error => console.log(`Error saving markdown: ${error}`));
 });
 
+/****HELPER FUNCTIONS****/
+
+// Append markdowns to the drop-down menu
 const appendMarkdowns = mds => {
   mds.forEach(md => {
     $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}</option>`);
   });
 };
 
+// Update markdown/HTML content when selecting markdown from drop-down menu
 const setSelectedMarkdown = id => {
-  console.log("ID: ", id, typeof id);
   Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* getSingleMarkdown */])(id).then(md => {
-    console.log("MD: ", md);
     $('#live-markdown').val(md.content);
     $('#live-markdown').keyup();
   }).catch(error => console.log({ error }));
 };
 
+// Update the HTML preview when the markdown changes
 const updatePreview = event => {
   const md = markdownit();
   let htmlResult = md.render(event.currentTarget.value);
   $('#html-preview').html(htmlResult);
 };
+
+/****SERVICE WORKER REGISTRATION****/
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -144,10 +155,8 @@ if ('serviceWorker' in navigator) {
 
     // Register a new service worker
     navigator.serviceWorker.register('./service-worker.js').then(registration => {
-      // Registration was successful
       console.log('ServiceWorker registration successful');
     }).catch(err => {
-      // registration failed :(
       console.log(`ServiceWorker registration failed: ${err}`);
     });
   });
