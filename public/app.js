@@ -1,7 +1,8 @@
 import {
   saveOfflineMarkdown,
   loadOfflineMarkdowns,
-  getSingleMarkdown
+  getSingleMarkdown,
+  setPendingMarkdownsToSynced
 } from './indexedDB';
 
 

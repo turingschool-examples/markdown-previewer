@@ -16,4 +16,8 @@ export const getSingleMarkdown = (id) => {
 
 export const loadOfflineMarkdowns = () => {
   return db.markdownFiles.toArray()
-}; 
+};
+
+export const setPendingMarkdownsToSynced = () => {
+  return db.markdownFiles.where('status').equals('pendingSync').modify({status: 'synced'});
+};
