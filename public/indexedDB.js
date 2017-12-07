@@ -3,7 +3,7 @@ import Dexie from 'dexie';
 let db = new Dexie('hotMark');
 
 db.version(2).stores({
-  markdownFiles: 'id, title, content', 'status'
+  markdownFiles: 'id, title, content, status'
 });
 
 export const saveOfflineMarkdown = (md) => {
