@@ -80,6 +80,7 @@ if ('serviceWorker' in navigator) {
       .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
         swController = navigator.serviceWorker.controller;
+        console.log(navigator.serviceWorker.controller);
         console.log('ServiceWorker registration successful');
       }).catch(err => {
         console.log(`ServiceWorker registration failed: ${err}`);

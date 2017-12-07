@@ -35,8 +35,11 @@ this.addEventListener('activate', (event) => {
   );
 });
 
+let pendingMarkdowns = [];
+
 this.addEventListener('message', (event) => {
-  console.log(event.data.markdown);
+  pendingMarkdowns.push(event.data.markdown);
+  console.log(pendingMarkdowns);
 });
 
 this.addEventListener('sync', (event) => {

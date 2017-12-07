@@ -167,6 +167,7 @@ if ('serviceWorker' in navigator) {
     // Register a new service worker
     navigator.serviceWorker.register('./service-worker.js').then(registration => navigator.serviceWorker.ready).then(registration => {
       swController = navigator.serviceWorker.controller;
+      console.log(navigator.serviceWorker.controller);
       console.log('ServiceWorker registration successful');
     }).catch(err => {
       console.log(`ServiceWorker registration failed: ${err}`);
