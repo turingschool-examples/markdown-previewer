@@ -34,3 +34,34 @@ this.addEventListener('activate', (event) => {
     })
   );
 });
+
+this.addEventListener('message', (event) => {
+  console.log(event.data.markdown);
+});
+
+this.addEventListener('sync', (event) => {
+  if (event.tag === 'addMarkdown') {
+    event.waitUntil(postPendingMarkdowns()
+      .then(response => console.log(response))
+      .catch(error => console.error(error))
+    );
+  }
+});
+
+const postPendingMarkdowns = () => {
+  getPendingMarkdowns()
+  .then((markdowns) => {
+    let markdownPromises = markdowns.map((markdown) => {
+      return fetch('/api/v1/markdowns', {
+        method: 'POST',
+        body: JSON.stringify(markdown),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    })
+
+    return Promise.all(markdownPromises);
+  })
+  .catch(error => console.error(error))
+};

@@ -99,6 +99,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__indexedDB__ = __webpack_require__(2);
 
 
+let swController;
+
 /****EVENT LISTENERS****/
 
 // Update HTML preview when markdown textarea changes
@@ -116,11 +118,19 @@ $('#submit-markdown').on('click', event => {
   let title = $('#title').val();
   let id = Date.now();
 
-  Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["c" /* saveOfflineMarkdown */])({ id, content, title }).then(md => {
+  Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["c" /* saveOfflineMarkdown */])({ id, content, title, status: 'pendingSync' }).then(md => {
+    sendMessageToSync({ id, content, title, status: 'pendingSync' });
     appendMarkdowns([{ id, title }]);
     $('#offline-markdowns').val(`md-${id}`);
   }).catch(error => console.log(`Error saving markdown: ${error}`));
 });
+
+const sendMessageToSync = markdown => {
+  swController.postMessage({
+    type: 'add-markdown',
+    markdown: markdown
+  });
+};
 
 /****HELPER FUNCTIONS****/
 
@@ -155,7 +165,8 @@ if ('serviceWorker' in navigator) {
     Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["b" /* loadOfflineMarkdowns */])().then(markdowns => appendMarkdowns(markdowns)).catch(error => console.log(`Error loading markdowns: ${error}`));
 
     // Register a new service worker
-    navigator.serviceWorker.register('./service-worker.js').then(registration => {
+    navigator.serviceWorker.register('./service-worker.js').then(registration => navigator.serviceWorker.ready).then(registration => {
+      swController = navigator.serviceWorker.controller;
       console.log('ServiceWorker registration successful');
     }).catch(err => {
       console.log(`ServiceWorker registration failed: ${err}`);
@@ -173,8 +184,8 @@ if ('serviceWorker' in navigator) {
 
 let db = new __WEBPACK_IMPORTED_MODULE_0_dexie__["a" /* default */]('hotMark');
 
-db.version(1).stores({
-  markdownFiles: 'id, title, content'
+db.version(2).stores({
+  markdownFiles: 'id, title, content, status'
 });
 
 const saveOfflineMarkdown = md => {
@@ -193,6 +204,14 @@ const loadOfflineMarkdowns = () => {
   return db.markdownFiles.toArray();
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = loadOfflineMarkdowns;
+
+
+const getPendingMarkdowns = () => {
+  return db.markdownFiles.filter(file => {
+    return file.status === 'pendingSync';
+  }).toArray();
+};
+/* unused harmony export getPendingMarkdowns */
 
 
 /***/ }),

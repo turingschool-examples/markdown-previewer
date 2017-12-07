@@ -4,7 +4,7 @@ import {
   getSingleMarkdown
 } from './indexedDB';
 
-
+let swController;
 
 /****EVENT LISTENERS****/
 
@@ -23,15 +23,21 @@ $('#submit-markdown').on('click', event => {
   let title = $('#title').val();
   let id = Date.now();
 
-  saveOfflineMarkdown({ id, content, title })
+  saveOfflineMarkdown({ id, content, title, status: 'pendingSync' })
     .then(md => { 
+      sendMessageToSync({ id, content, title, status: 'pendingSync' });
       appendMarkdowns([{ id, title }]);
       $('#offline-markdowns').val(`md-${id}`);
     })
     .catch(error => console.log(`Error saving markdown: ${error}`));
 });
 
-
+const sendMessageToSync = (markdown) => {
+  swController.postMessage({ 
+    type: 'add-markdown',
+    markdown: markdown
+  });
+};
 
 /****HELPER FUNCTIONS****/
 
@@ -71,7 +77,9 @@ if ('serviceWorker' in navigator) {
     
     // Register a new service worker
     navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
+        swController = navigator.serviceWorker.controller;
         console.log('ServiceWorker registration successful');
       }).catch(err => {
         console.log(`ServiceWorker registration failed: ${err}`);
