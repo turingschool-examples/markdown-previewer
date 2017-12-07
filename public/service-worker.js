@@ -32,5 +32,6 @@ this.addEventListener('activate', (event) => {
         }
       }));
     })
+    .then(() => clients.claim())
   );
 });
