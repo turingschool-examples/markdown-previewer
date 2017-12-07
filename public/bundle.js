@@ -132,24 +132,18 @@ const appendMarkdowns = mds => {
 };
 
 // Update markdown/HTML content when selecting markdown from drop-down menu
-const setSelectedMarkdown = id => {
+const setSelectedMarkdown = id => {}
+/****************************** TO DO ******************************/
+// 1. Get single markdown from IDB by it's ID. Then...
+// 2. Update the value of the #live-markdown textarea to display that
+//    markdown's content
+// 3. Then, trigger keyup() on the #live-markdown textarea to prompt
+//    the HTML preview to update
+/*******************************************************************/
 
-  /****************************** TO DO ******************************/
-  // 1. Get single markdown from IDB by it's ID. Then...
-  // 2. Update the value of the #live-markdown textarea to display that
-  //    markdown's content
-  // 3. Then, trigger keyup() on the #live-markdown textarea to prompt
-  //    the HTML preview to update
-  /*******************************************************************/
-
-  Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* getSingleMarkdown */])(id).then(md => {
-    $('#live-markdown').val(md.content);
-    $('#live-markdown').keyup();
-  }).catch(error => console.log({ error }));
-};
 
 // Update the HTML preview when the markdown changes
-const updatePreview = event => {
+;const updatePreview = event => {
   const md = markdownit();
   let htmlResult = md.render(event.currentTarget.value);
   $('#html-preview').html(htmlResult);
@@ -197,7 +191,7 @@ const saveOfflineMarkdown = md => {
 const getSingleMarkdown = id => {
   // retrieve single markdown from IDB by id
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = getSingleMarkdown;
+/* unused harmony export getSingleMarkdown */
 
 
 const loadOfflineMarkdowns = () => {

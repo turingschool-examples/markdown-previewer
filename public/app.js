@@ -42,7 +42,6 @@ const appendMarkdowns = (mds) => {
 
 // Update markdown/HTML content when selecting markdown from drop-down menu
 const setSelectedMarkdown = (id) => {
-
   /****************************** TO DO ******************************/
   // 1. Get single markdown from IDB by it's ID. Then...
   // 2. Update the value of the #live-markdown textarea to display that
@@ -50,11 +49,6 @@ const setSelectedMarkdown = (id) => {
   // 3. Then, trigger keyup() on the #live-markdown textarea to prompt
   //    the HTML preview to update
   /*******************************************************************/
-
-  getSingleMarkdown(id).then(md => {
-    $('#live-markdown').val(md.content);
-    $('#live-markdown').keyup();
-  }).catch(error => console.log({error}))
 }
 
 // Update the HTML preview when the markdown changes
