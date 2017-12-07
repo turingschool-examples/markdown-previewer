@@ -1,10 +1,9 @@
 import {
   saveOfflineMarkdown,
   loadOfflineMarkdowns,
-  getSingleMarkdown
+  getSingleMarkdown,
+  setPendingMarkdownsToSynced
 } from './indexedDB';
-
-let swController;
 
 /****EVENT LISTENERS****/
 
@@ -12,12 +11,20 @@ let swController;
 $('#live-markdown').on('keyup', event => updatePreview(event));
 
 // Set selected markdown when using drop down menu
-$('#offline-markdowns').on('change', function(event) {
+$('#offline-markdowns').on('change', (event) => {
   let markdownId = $(this).val().split('-')[1];
   setSelectedMarkdown(markdownId);
 });
 
 // Save markdown to IndexedDB
+
+const sendMessageToSync = markdown => {
+  navigator.serviceWorker.controller.postMessage({ 
+    type: 'add-markdown',
+    markdown: markdown
+  });
+};
+
 $('#submit-markdown').on('click', event => {
   let content = $('#live-markdown').val();
   let title = $('#title').val();
@@ -26,25 +33,35 @@ $('#submit-markdown').on('click', event => {
   saveOfflineMarkdown({ id, content, title, status: 'pendingSync' })
     .then(md => { 
       sendMessageToSync({ id, content, title, status: 'pendingSync' });
-      appendMarkdowns([{ id, title }]);
+      appendMarkdowns([{ id, title, status: 'pendingSync' }]);
       $('#offline-markdowns').val(`md-${id}`);
     })
     .catch(error => console.log(`Error saving markdown: ${error}`));
 });
 
-const sendMessageToSync = (markdown) => {
-  swController.postMessage({ 
-    type: 'add-markdown',
-    markdown: markdown
-  });
-};
+navigator.serviceWorker.addEventListener('message', event => {
+  if (event.data.type === 'markdowns-synced') {
+    setPendingMarkdownsToSynced()
+      .then(result => {
+        $('#offline-markdowns option').each((idx, option) => {
+          $(option).text($(option).text().replace('*',''))
+        })
+      })
+      .catch(error => console.error(error))
+  }
+});
+
 
 /****HELPER FUNCTIONS****/
 
 // Append markdowns to the drop-down menu
 const appendMarkdowns = (mds) => {
   mds.forEach(md => {
-    $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}</option>`);
+    if (md.status === 'pendingSync') {
+      $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}*</option>`);
+    } else {
+      $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}</option>`);
+    }
   });
 }
 
@@ -79,8 +96,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js')
       .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
-        swController = navigator.serviceWorker.controller;
-        console.log(navigator.serviceWorker.controller);
+        Notification.requestPermission();
         console.log('ServiceWorker registration successful');
       }).catch(err => {
         console.log(`ServiceWorker registration failed: ${err}`);

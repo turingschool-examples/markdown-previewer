@@ -32,39 +32,43 @@ this.addEventListener('activate', (event) => {
         }
       }));
     })
+    .then(() => clients.claim())
   );
 });
 
 let pendingMarkdowns = [];
 
 this.addEventListener('message', (event) => {
-  pendingMarkdowns.push(event.data.markdown);
-  console.log(pendingMarkdowns);
+  if (event.data.type === 'add-markdown') {
+    pendingMarkdowns.push(event.data.markdown);
+    self.registration.sync.register('addMarkdown')
+  }
 });
 
 this.addEventListener('sync', (event) => {
   if (event.tag === 'addMarkdown') {
     event.waitUntil(postPendingMarkdowns()
-      .then(response => console.log(response))
+      .then(responses => {
+        self.clients.matchAll().then(clients => {
+          clients[0].postMessage({ type: 'markdowns-synced' });
+        });
+        self.registration.showNotification("New markdowns synced!");
+      })
       .catch(error => console.error(error))
     );
   }
 });
 
 const postPendingMarkdowns = () => {
-  getPendingMarkdowns()
-  .then((markdowns) => {
-    let markdownPromises = markdowns.map((markdown) => {
-      return fetch('/api/v1/markdowns', {
-        method: 'POST',
-        body: JSON.stringify(markdown),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+  let markdownPromises = pendingMarkdowns.map((markdown) => {
+    return fetch('/api/v1/markdowns', {
+      method: 'POST',
+      body: JSON.stringify(markdown),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-
-    return Promise.all(markdownPromises);
   })
-  .catch(error => console.error(error))
+
+  return Promise.all(markdownPromises);
 };

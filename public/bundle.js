@@ -97,9 +97,9 @@ module.exports = g;
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__indexedDB__ = __webpack_require__(2);
+var _this = this;
 
 
-let swController;
 
 /****EVENT LISTENERS****/
 
@@ -107,12 +107,20 @@ let swController;
 $('#live-markdown').on('keyup', event => updatePreview(event));
 
 // Set selected markdown when using drop down menu
-$('#offline-markdowns').on('change', function (event) {
-  let markdownId = $(this).val().split('-')[1];
+$('#offline-markdowns').on('change', event => {
+  let markdownId = $(_this).val().split('-')[1];
   setSelectedMarkdown(markdownId);
 });
 
 // Save markdown to IndexedDB
+
+const sendMessageToSync = markdown => {
+  navigator.serviceWorker.controller.postMessage({
+    type: 'add-markdown',
+    markdown: markdown
+  });
+};
+
 $('#submit-markdown').on('click', event => {
   let content = $('#live-markdown').val();
   let title = $('#title').val();
@@ -120,24 +128,31 @@ $('#submit-markdown').on('click', event => {
 
   Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["c" /* saveOfflineMarkdown */])({ id, content, title, status: 'pendingSync' }).then(md => {
     sendMessageToSync({ id, content, title, status: 'pendingSync' });
-    appendMarkdowns([{ id, title }]);
+    appendMarkdowns([{ id, title, status: 'pendingSync' }]);
     $('#offline-markdowns').val(`md-${id}`);
   }).catch(error => console.log(`Error saving markdown: ${error}`));
 });
 
-const sendMessageToSync = markdown => {
-  swController.postMessage({
-    type: 'add-markdown',
-    markdown: markdown
-  });
-};
+navigator.serviceWorker.addEventListener('message', event => {
+  if (event.data.type === 'markdowns-synced') {
+    Object(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["d" /* setPendingMarkdownsToSynced */])().then(result => {
+      $('#offline-markdowns option').each((idx, option) => {
+        $(option).text($(option).text().replace('*', ''));
+      });
+    }).catch(error => console.error(error));
+  }
+});
 
 /****HELPER FUNCTIONS****/
 
 // Append markdowns to the drop-down menu
 const appendMarkdowns = mds => {
   mds.forEach(md => {
-    $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}</option>`);
+    if (md.status === 'pendingSync') {
+      $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}*</option>`);
+    } else {
+      $('#offline-markdowns').append(`<option value="md-${md.id}">${md.title}</option>`);
+    }
   });
 };
 
@@ -166,8 +181,7 @@ if ('serviceWorker' in navigator) {
 
     // Register a new service worker
     navigator.serviceWorker.register('./service-worker.js').then(registration => navigator.serviceWorker.ready).then(registration => {
-      swController = navigator.serviceWorker.controller;
-      console.log(navigator.serviceWorker.controller);
+      Notification.requestPermission();
       console.log('ServiceWorker registration successful');
     }).catch(err => {
       console.log(`ServiceWorker registration failed: ${err}`);
@@ -207,12 +221,10 @@ const loadOfflineMarkdowns = () => {
 /* harmony export (immutable) */ __webpack_exports__["b"] = loadOfflineMarkdowns;
 
 
-const getPendingMarkdowns = () => {
-  return db.markdownFiles.filter(file => {
-    return file.status === 'pendingSync';
-  }).toArray();
+const setPendingMarkdownsToSynced = () => {
+  return db.markdownFiles.where('status').equals('pendingSync').modify({ status: 'synced' });
 };
-/* unused harmony export getPendingMarkdowns */
+/* harmony export (immutable) */ __webpack_exports__["d"] = setPendingMarkdownsToSynced;
 
 
 /***/ }),
