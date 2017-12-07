@@ -133,6 +133,7 @@ const appendMarkdowns = mds => {
 
 // Update markdown/HTML content when selecting markdown from drop-down menu
 const setSelectedMarkdown = id => {}
+
 /****************************** TO DO ******************************/
 // 1. Get single markdown from IDB by it's ID. Then...
 // 2. Update the value of the #live-markdown textarea to display that
