@@ -1,6 +1,6 @@
 {
-  "short_name": "hotMark",
-  "name": "Your Favorite MarkDown Previewer",
+  "short_name": "Markdown Previewer",
+  "name": "Your Favorite Markdown Previewer",
   "background_color": "#dcaffd",
   "theme_color": "#74c7fd",
   "display": "fullscreen",
