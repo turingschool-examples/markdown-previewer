@@ -4,6 +4,7 @@ this.addEventListener('install', event => {
       return cache.addAll([
         '/',
         '/app.js',
+        '/bundle.js',
         '/css/app.css',
         '/img/logo.png',
         '/lib/jquery-3.2.1.js',
