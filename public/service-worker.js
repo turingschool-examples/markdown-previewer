@@ -3,6 +3,7 @@ this.addEventListener('install', event => {
     caches.open('assets-v1').then(cache => {
       return cache.addAll([
         '/',
+        '/app.js',
         '/bundle.js',
         '/css/app.css',
         '/img/logo.png',
